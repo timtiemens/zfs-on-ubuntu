@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# A machine to test creation of encypted filesystems
+
+# data disk, file names:
+disk_one = 'zfs_one.vdi'
+disk_two = 'zfs_two.vdi'
+
+# size for each data disk:
+size_in_gigabytes = 10
+
+# your provider might have a different name for the controller:
+# controller = 'SATA Controller'
+# SATAController is for VirtualBox 4.3.10
+controller = 'SATAController'
+
+Vagrant.configure("2") do |config|
+  # some shared setup
+  config.vm.box = "ubuntu/trusty64"
+  config.ssh.forward_agent = true
+  config.hostmanager.enabled = true
+  config.cache.scope = :box
+  config.vm.network "forwarded_port", guest: 8080, host:8123
+
+  config.vm.define "ub-trusty-enc" do |admin|
+    admin.vm.hostname = "vbox-zfs-trusty"
+    admin.vm.network :private_network, ip: "172.21.12.10"
+  end
+
+  config.vm.provider "virtualbox" do |p|
+    unless File.exist?(disk_one)
+      p.customize ['createhd', '--filename', disk_one, '--size', size_in_gigabytes * 1024]
+    end
+    unless File.exist?(disk_two)
+      p.customize ['createhd', '--filename', disk_two, '--size', size_in_gigabytes * 1024]
+    end
+    p.customize ['storageattach', :id, '--storagectl', controller, '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk_one]
+    p.customize ['storageattach', :id, '--storagectl', controller, '--port', 2, '--device', 0, '--type', 'hdd', '--medium', disk_two]
+  end
+end
+
