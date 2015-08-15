@@ -6,6 +6,9 @@ o Vagrant configuration, showing "data disks"
 
 Vagrant
 -------------
+The Vagrantfile can create a Ubuntu trusty (14.04) VirtualBox image,
+with extra "data" disks.  Then you can install the ZFS kernel mod,
+and start playing with ZFS pool(s).
  
 Build
 ------
@@ -18,9 +21,10 @@ Important Notes
 Documentation
 ----
 [ZFS on Ubuntu] - Unbuntu-specific ZFS installation
+
 [ZFS on Linux] - ZFS on Linux, native Linux kernel port of ZFS filesystem
 
-[Vagrant] - more links to useful Shamir Secret Share documentation and projects
+[Vagrant] - sub-project notes, for Vagrant
 
 
 [ZFS on Ubuntu]: https://wiki.ubuntu.com/ZFS
